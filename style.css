@@ -292,13 +292,13 @@
   
   /* Style for Delete section */
   #sector-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0;
-    padding: 10px;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    /*margin: 5px 0; */
+    padding: 12px; 
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
+    border-radius: 12px;
     border: 1px solid #333;
   }
   
@@ -306,7 +306,7 @@
     background: transparent;
     color: #888;
     border: 1px solid #444;
-    padding: 4px 10px;
+    border-radius: 12px !important;
     font-size: 0.7rem;
     cursor: pointer;
     transition: 0.3s;
@@ -319,6 +319,12 @@
     box-shadow: 0 0 10px var(--neon-blue);
     font-weight: bold;
   }
+
+  .sector-btn, .active-sector-btn {
+    border-radius: 50px; /* Wartość większa niż wysokość przycisku tworzy idealny owal */
+    padding: 10px 20px;
+}
+
   
   #delete-sector-btn {
     background: transparent;
