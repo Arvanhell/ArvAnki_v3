@@ -37,28 +37,41 @@
         
         <button id="delete-sector-btn" title="Neutralize this dimension">ERASE</button>
       </div>
-      
-
-      <hr>
-
-       <article class="card">
-         <button id="delete-btn" style="display:none;">🗑</button>
-         
-         <h2 id="question-text">Sync system to start...</h2>
-         <div id="answer-text" style="display:none"></div>
-       </article>
-     </main>
-       
-
+        <div style="text-align: center; margin: 20px 0;">
+          <button onclick="openDeckView()" class="active-sector-btn" style="padding: 15px 40px;">
+            ENGAGE REVIEW ⚡️
+          </button>
+        </div>  
+      <div id="deck-modal" class="modal-overlay" style="display:none;">
+        <div class="flashcard-stage" onclick="toggleFlip()">
+            <div id="card-inner" class="card-inner">
+                
+                <div class="card-front">
+                    <button id="delete-btn" style="display:none; position:absolute; top:10px; right:10px;">🗑</button>
+                    <h2 id="question-text">Sync system to start...</h2>
+                    <div id="show-answer" class="sector-btn">🦾 REVEAL TRUTH 🔄</div>
+                </div>
+    
+                <div class="card-back">
+                    <div id="answer-text" style="display:none"></div>
+                    <div id="repetition-controls" style="display:none">
+                      <button id="hard-btn" class="pill-btn">Hard (1d)</button>
+                      <button id="good-btn" class="pill-btn">Good (3d)</button>
+                      <button id="easy-btn" class="pill-btn">Easy (7d)</button>
+                      <button id="omega-btn" class="pill-btn omega-pill">Alpha & Omega</button>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button onclick="closeDeckView()" class="sector-btn">RETURN TO GARAGE</button>
+        </div>
+    </div>
+    
     <footer>
-      <div id="repetition-controls" style="display:none">
-        <button id="hard-btn">Hard (1d)</button>
-        <button id="good-btn">Good (3d)</button>
-        <button id="easy-btn">Easy (7d)</button>
-        <button id="omega-btn" class="omega">Alpha & Omega</button>
-      </div>
 
-      <button id="show-answer">Show Answer</button>
+      
 
       <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #30363d;">
 

@@ -32,7 +32,7 @@
     margin-bottom: 20px;
   }
   
-  /* --- 3. PROFIL PILOTA (SYNC) --- */
+  /* --- 3. PROFIL PILOT (SYNC) --- */
   .user-profile {
     display: flex;
     align-items: center;
@@ -43,10 +43,10 @@
   }
   
   #login-btn {
-    width: auto;               /* Pozwala bramom ogrodu się rozszerzyć */
-    min-width: 45px;           /* Ale nie mniejszy niż kwadrat */
+    width: auto;               
+    min-width: 45px;           
     height: 45px;
-    padding: 0 15px;           /* Daje oddech napisowi po bokach */
+    padding: 0 15px;           
     background: transparent;
     color: var(--neon-blue);
     border: 1px solid var(--neon-blue);
@@ -55,8 +55,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;        /* Nieco mniejsza czcionka, by była smuklejsza */
-    white-space: nowrap;       /* Zakaz łamania tekstu na dwie linie */
+    font-size: 0.85rem;        /* smoother font */
+    white-space: nowrap;       /* No breeaking lines for text */
     transition: 0.3s;
   }
   
@@ -82,14 +82,14 @@
     border: 1px solid #30363d;
   }
   
-  /* Koniec autostrady dla stonogi - skracamy pole pilota */
+  /* Catepilar :) */
   #user-input {
-      width: 140px !important; /* Sztywna, krótka granica */
-      flex: none !important;    /* Zakaz rozciągania się */
+      width: 140px !important; /*  */
+      flex: none !important;   /*  */
       margin-right: 10px;
   }
   
-  /* Upewnienie się, że napis "Active Pilot" nie ucieka niżej */
+  /* User Active Pilot */
   .user-profile h3 {
       margin: 0;
       font-size: 0.9rem;
@@ -127,7 +127,7 @@
     transition: 0.3s;
   }
   
-  /* --- 5. KARTA --- */
+  /* --- 5. The CARD --- */
   .card {
     position: relative; /* FUNDAMENT DLA KOSZA */
     margin-top: 30px;
@@ -146,15 +146,7 @@
     margin-bottom: 20px;
   }
   
-  #answer-text {
-    color: var(--neon-green);
-    font-size: 1.3rem;
-    padding: 10px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-  
-  /* --- 6. KOSZ (SMUKŁY AGENT) --- */
+  /* --- 6. Bin little agent  --- */
   #delete-btn {
     position: absolute;
     top: -15px;         /* Wystaje lekko ponad górną krawędź karty */
@@ -182,7 +174,7 @@
   }
   
   
-  /* ---- 7. STOPKA I KONTROLA ----- */
+  /* ---- 7. Footer and CONTROL ----- */
   footer {
     width: 100%;
     max-width: 600px;
@@ -191,41 +183,78 @@
     text-align: center;
   }
   
-  #repetition-controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  
-  #repetition-controls button {
-    flex: 1;
-    min-width: 80px;
-    padding: 10px;
-    background: #21262d;
-    color: var(--text-color);
-    border: 1px solid #30363d;
-    border-radius: 4px;
-  }
-  
+  /* --- REPETITION CONTROL --- */
+#repetition-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: none; 
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+  z-index: 100;
+}
+
+/* ...------------------------------------------------------- ... */
+
   #show-answer {
-    width: 100%;
-    padding: 15px;
-    background: transparent;
+    width: 80%;           
+    margin: 40px auto;    
+    padding: 10px;
+    background: rgba(88, 166, 255, 0.05); /* Ledwo widoczne tło */
     color: var(--neon-blue);
-    border: 2px solid var(--neon-blue);
-    border-radius: var(--border-radius);
-    font-size: 1.1rem;
-    font-weight: bold;
+    border: 1px solid rgba(88, 166, 255, 0.3); /* Subtelna linia */
+    border-radius: 50px;  /* Spójność z tabletkami */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.4s all cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+#show-answer:hover {
+    background: rgba(88, 166, 255, 0.15);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+    letter-spacing: 4px; /* Efekt rozszerzania napisu przy najechaniu */
+}
+  /*---------------------------------------------------- */
+  .pill-btn{
+    background:rgba(0,0,0, 0.3);
+    color: var(--neon-blue);
+    border: 1px solid rgba(88,166,255, 0.4);
+    border-radius: 400px;
+    padding: 6px 12px;
+    font-size: 0.50rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 60px;
   }
-  
-  .omega {
+
+  .pill-btn:hover {
+    border-color: var(--neon-blue);
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 15px var(--neon-blue);
+  }
+
+  .omega-pill {
     background: var(--danger) !important;
     color: white !important;
     box-shadow: 0 0 10px var(--danger);
   }
-  
+
+  .omega-pill:hover {
+    background: var(--danger);
+    color: white;
+    box-shadow: 0 0 10px var(--danger);
+  }
+/*----------------------------------------------------------*/
   #system-tools {
     display: flex;
     justify-content: center;
@@ -342,3 +371,106 @@
     opacity: 1;
   }
   
+  /* --- 9. MODAL & 3D FLASHCARD SYSTEM --- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(13, 17, 23, 0.95); /* Deep dark */
+  z-index: 2000; display: none; /* JS to odpala */
+  flex-direction: column; justify-content: center; align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.flashcard-stage {
+  width: 90%; max-width: 500px; height: 350px;
+  perspective: 1200px; cursor: pointer;
+}
+
+.card-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-inner.is-flipped { transform: rotateY(180deg); }
+
+/* Wspólne fundamenty dla obu stron */
+.card-front, .card-back {
+  position: absolute; /* ZOSTAJE absolute dla obu! */
+  width: 100%; 
+  height: 100%;
+  backface-visibility: hidden; 
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; /* Tekst pytania/odpowiedzi na środku */
+  padding: 30px; 
+  border: 2px solid var(--neon-blue);
+  background: #161b22; 
+  border-radius: var(--border-radius);
+  text-align: center; 
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.1);
+}
+
+/* Specyfika tyłu karty */
+.card-back {
+  position: absolute; /* Przywracamy absolute, by mechanizm 3D działał */
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* KLUCZ: Wszystko co wyjdzie poza ramkę karty, znika */
+  overflow: hidden; 
+  
+  padding: 20px;
+  padding-bottom: 75px; /* Rezerwacja miejsca na dole dla przycisków */
+  border: 2px solid var(--neon-green);
+  background: #161b22;
+  border-radius: var(--border-radius);
+  transform: rotateY(180deg);
+}
+
+#answer-text {
+  width: 100%;
+  /* KLUCZ: Jeśli tekst jest za długi, pojawia się wewnętrzny scroll */
+  overflow-y: auto; 
+  /* Zajmuje całą dostępną przestrzeń nad przyciskami */
+  flex-grow: 1; 
+  
+  margin-top: 10px;
+  color: #adbac7; 
+  font-size: 1.1rem;
+  line-height: 1.5;
+  text-align: center;
+  word-wrap: break-word; /* Rozbija długie ciągi jak "gsdfgaf..." */
+  
+  /* Estetyka scrollbara dla Chrome/Safari */
+  scrollbar-width: thin;
+  scrollbar-color: var(--neon-blue) transparent;
+}
+
+#answer-text::-webkit-scrollbar {
+  width: 4px;
+}
+#answer-text::-webkit-scrollbar-thumb {
+  background: var(--neon-blue);
+  border-radius: 10px;
+}
+
+
+.card-back {
+  transform: rotateY(180deg);
+  border-color: var(--neon-green);
+  padding-bottom: 80px; 
+}
+*/
+
+
+.modal-footer { margin-top: 30px; }
+
+/* Poprawka dla przycisków wewnątrz modala */
+#deck-modal #repetition-controls {
+  display: flex; gap: 10px; margin-top: 20px; width: 100%;
+}
+

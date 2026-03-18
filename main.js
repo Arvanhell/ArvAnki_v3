@@ -123,7 +123,7 @@ const postpone = (days) => {
   deck[currentIndex].nextReview = Date.now() + (days * msInDay);
   saveToStorage();
   updateStats();
-  showNextDueCard();
+  showNextDueCard();// fire up modal is- flipped
 };
 
 const rateCard = (level) => {
@@ -134,21 +134,41 @@ const rateCard = (level) => {
 
 // --- 5. UI RENDERING ---
 const showAnswer = () => {
-  $('answer-text').style.display = 'block'; 
-  $('show-answer').style.display = 'none'; 
-  $('repetition-controls').style.display = 'flex'; 
+  const ans = $('answer-text');
+  if (ans) ans.style.display = 'block'; 
+
+  // Back of flipped card
+  const controls = $('repetition-controls');
+  if (controls) {
+  controls.style.display = 'flex';
+  }
 };
 
-const renderCard = () => {
+//////////  NEW DECK VIEW LOGIC ///////////
+const openDeckView = () => {
+  $('deck-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  showNextDueCard(); // we use OUR existing engine 
+};
+
+const closeDeckView = () => {
+  $('deck-modal').style.display = "none";
+  document.body.style.overflow = 'auto';
+};
+
+
+let renderCard = () => {
   const currentCard = deck[currentIndex];
-  if (!currentCard) {
+  const inner = $('card-inner');
+  if (inner) inner.classList.remove('is-flipped');     
+  if (!'currentCard') {
     $('question-text').innerText = "All clear.. . Rest, Spark.";
     $('answer-text').style.display = 'none';
     $('repetition-controls').style.display = "none";
     $('show-answer').style.display = 'none';
     return;
   }
-
+// Adding questions to modal
   $('question-text').innerHTML = `${currentCard.question} <br> <small style="font-size:0.6rem; color:var(--neon-blue); cursor:pointer;">[TAP TO EDIT]</small>`;
   $('question-text').onclick = startEdit;
   $('answer-text').innerText = currentCard.answer;
@@ -158,6 +178,19 @@ const renderCard = () => {
   $('delete-btn').style.display = 'none';
 };
 
+const wrapRenderCard = renderCard;
+
+const toggleFlip = () => {
+  const inner = $('card-inner');
+  if (inner) {
+    inner.classList.toggle('is-flipped');
+  if (inner.classList.contains('is-flipped')) {
+    showAnswer();
+    } 
+  }
+};
+
+//
 const showNextDueCard = () => {
   const now = Date.now();
   const dueCards = deck.filter(card => {
@@ -271,25 +304,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Postpone Ratings
   const h = $('hard-btn'); 
   if(h) {
-    h.innerText=' 1 day ⚠️';
-    h.title = "Postponed 1 day "
+    h.innerText='HARD (1d) ⚠️';
     h.onclick = () => rateCard('hard'); 
   }
   const g = $('good-btn'); 
   if(g) {
-    g.innerText = '3 days 💤';
-    g.title = "Postponed 💤 3 days (Archived)";
+    g.innerText = 'GOOD (3d) 💤';
     g.onclick = () => rateCard('good');
   }
   const e = $('easy-btn'); 
   if(e) {
-    e.innerText = '7 days 🚀'; 
-    e.title = 'Postpone  7 days (Archived)';
+    e.innerText = 'EASY (7d)🚀'; 
     e.onclick = () => rateCard('easy');}
   const o = $('omega-btn'); 
   if(o) {
-      o.innerText = '30 days 💤💤'; 
-      o.title = 'Postpone 30 days (Archived)';    
+      o.innerText = 'OMEGA(30d)💀'; 
       o.onclick = () => postpone(30);
     }
 
