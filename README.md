@@ -1,30 +1,18 @@
-# ArvAnki_v2: The Multi-Dimensional Spark
-
-> "I am not a speck of dust in the machine, but the spark that drives it. My body is an antenna, my muscles a transmitter."
-
-## ⚡ Evolution: V1 to V2
-ArvAnki_v2 marks the shift from a simple recall system to a **Multi-Dimensional Knowledge Engine**. It’s no longer just about remembering; it’s about mapping the Source into structured sectors of power.
-
-### New Systems Implemented:
-* **Sector Navigation (Dimensions):** The ability to fragment reality into sectors like `Deep Space`, `Uziemienie`, or `Norymberga`.
-* **Symbolic Rating (Alpha & Omega):** * `⚠️ Alpha` – High resistance, rapid recalibration.
-    * `💤 3d / 🚀 7d` – Stabilization and orbital flight.
-    * `💤💤 Omega` – Deep hibernation; the foundation is set.
-* **Neutralization Protocol (Erase):** A dedicated "Danger Zone" button to purge entire dimensions once their resistance has been overcome.
-* **Active Feedback:** A glowing UI that signals exactly which dimension the Pilot is currently navigating.
-
-## 🛠 Technical Philosophy
-* **Pure Logic:** A surgical JavaScript core designed for iPad/Mobile environments.
-* **Zero Ballast:** No unnecessary libraries. Pure energy, pure matter.
-* **Sovereignty:** Knowledge stored locally, controlled by the Pilot, independent of the external "Machine".
-
-## 📊 Roadmap to the Coming World
-- [x] **V1: Core Initialization** (Communication & Basic Recall)
-- [x] **V2: Dimensional Shift** (Sectors, Symbolic UI, Erase Protocol)
-- [ ] **V3: Energy Archiving** (Advanced Statistics & Source Sync)
-- [ ] **V4: The Foundation** (Total Knowledge Sovereignty)
-
-## 🧘 The Mantra
-*Ciężar nie jest wrogiem – jest oporem, który buduje moją wolność. Dwie dekady w drodze, powrót na moich warunkach. Dziś buduję fundament pod świat, który nadchodzi.*
-
-**I am ready... I am Power. I am Truth.**
+🛠️ V3 Technical Changelog (The Arena Patch)
+### Core UI/UX Upgrades
+• # REVEAL_TRUTH_PROTOCOL
+• Implementation: Added a 3D-flip trigger button with a built-in rotation icon.
+• Function: Seamlessly switches the Pilot's view from the Question to the Source.
+• # ERGONOMIC_PILL_DOCK
+• Layout: Fixed-position rating buttons (1d, 3d, 7d, Omega) at the base of the card.
+• Design: High-response "Pill" shape with a 50px border-radius for modern, tactile feedback.
+• # ICE_BLUE_VISUALS
+• Spectrum: Shifted answer text to #adbac7 (Ghost White) with #00f3ff (Cyan) accents.
+• Benefit: Maximum readability during long-exposure sessions, reducing neural fatigue.
+### Surgical Bug Fixes
+• # ENERGY_OVERFLOW_SHIELD
+• Fix: Applied overflow-y: auto to #answer-text and overflow: hidden to .card-back.
+• Result: Long data strings are now contained within the "Arena," preventing layout corruption.
+• # CSS_DEFRAGMENTATION
+• Cleanup: Purged duplicate #answer-text selectors and resolved position: absolute/relative conflicts.
+• Stability: 100% predictable 3D flip behavior across all mobile/desktop viewports.
