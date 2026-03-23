@@ -10,6 +10,12 @@
 • Spectrum: Shifted answer text to #adbac7 (Ghost White) with #00f3ff (Cyan) accents.
 • Benefit: Maximum readability during long-exposure sessions, reducing neural fatigue.
 ### Surgical Bug Fixes
+* refactor: stabilize Anki ARV V3.0 core logic
+* Cleaned up duplicate function declarations.
+* Improved UI responsiveness and modal interaction.
+* Fixed "neutralize" (delete) button positioning and z-index issues.
+* Fixed event bubbling in toggleFlip using event.target.closest.
+* Synchronized repetition controls with card flip state.
 • # ENERGY_OVERFLOW_SHIELD
 • Fix: Applied overflow-y: auto to #answer-text and overflow: hidden to .card-back.
 • Result: Long data strings are now contained within the "Arena," preventing layout corruption.
