@@ -146,6 +146,19 @@
     margin-bottom: 20px;
   }
   
+  #edit-hint {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 0.6rem;
+    color: var(--neon-blue);
+    opacity: 0.4;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 10; /* Żeby zawsze był na wierzchu */
+}
+
   /* --- 6. Bin little agent  --- */
   #delete-btn {
     position: absolute;
@@ -165,6 +178,7 @@
     font-size: 1.4rem;
     box-shadow: 0 0 15px rgba(248, 81, 73, 0.4);
     transition: 0.3s ease;
+  
   }
   
   #delete-btn:hover {
@@ -429,6 +443,8 @@
   background: #161b22;
   border-radius: var(--border-radius);
   transform: rotateY(180deg);
+  pointer-events: auto; /* Pozwala klikać w przyciski na tyłach */
+  backface-visibility: hidden; /* Ukrywa przód, gdy widoczny jest tył */
 }
 
 #answer-text {

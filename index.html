@@ -25,7 +25,7 @@
          <input type="text" id="quest-input" placeholder="Enter Question...">
          <input type="text" id="ans-input" placeholder="Enter Answer...">
          <input type="text" id="sector-input" placeholder="Pilot Sector... (Enter your Data Dimension)">
-         <button id= "add-btn">Add to Deck</button>
+         <button id= "add-btn">Add To Deck</button>
        </section>
        
       <hr>
@@ -43,13 +43,14 @@
           </button>
         </div>  
       <div id="deck-modal" class="modal-overlay" style="display:none;">
-        <div class="flashcard-stage" onclick="toggleFlip()">
+        <div class="flashcard-stage" onclick="toggleFlip(event)">
             <div id="card-inner" class="card-inner">
                 
                 <div class="card-front">
                     <button id="delete-btn" style="display:none; position:absolute; top:10px; right:10px;">🗑</button>
                     <h2 id="question-text">Sync system to start...</h2>
                     <div id="show-answer" class="sector-btn">🦾 REVEAL TRUTH 🔄</div>
+                    <div id="edit-hint" onclick="editCurrentCard(event)">[TAP TO EDIT]</div>
                 </div>
     
                 <div class="card-back">
