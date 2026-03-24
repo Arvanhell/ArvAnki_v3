@@ -22,3 +22,5 @@
 • # CSS_DEFRAGMENTATION
 • Cleanup: Purged duplicate #answer-text selectors and resolved position: absolute/relative conflicts.
 • Stability: 100% predictable 3D flip behavior across all mobile/desktop viewports.
+• Added manifest.json and service worker (sw.js) for offline access.
+• Registered service worker in main.js with relative path ./sw.js
