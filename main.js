@@ -241,3 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSectorFilters();
   console.log('--- Anki ARV V3.0: ACTIVE ---');
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+    .then(reg => console.log('ARV System: Offline Mode Active', reg))
+    .catch(err => console.log('ARV System: Offline Mode Failed', err));
+  });
+}

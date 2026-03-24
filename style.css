@@ -148,7 +148,7 @@
   
   #edit-hint {
     position: absolute;
-    top: 12px;
+    top: 45px;
     right: 12px;
     font-size: 0.6rem;
     color: var(--neon-blue);
