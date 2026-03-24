@@ -9,6 +9,7 @@ let cardToEditIndex = null;
 let currentActiveSector = 'All';
 
 // --- 2. STORAGE & STATS ---
+
 const updateStats = () => {
   const total = $('total-cards');
   if (total) total.innerText = deck.length;
@@ -17,7 +18,35 @@ const updateStats = () => {
 const saveToStorage = () => {
   localStorage.setItem(`deck_${currentUser}`, JSON.stringify(deck));
 };
-      
+// Import to Storage 
+const importDeck = (event) => {
+  const file = event.target.files[0];
+  if (!file) return
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedData = JSON.parse(e.target.result);
+        if (Array.isArray(importedData)) {
+          deck = importedData;
+          saveToStorage();
+          updateStats();
+          showNextDueCard();
+          alert("System: Dimension data synchronized.");
+          } else {
+            alert("Error: Invalid data structure.");
+          }
+        } catch (err){
+          alert("System Error: Data corrupted during transmission.");
+        }
+    };
+    reader.readAsText(file);
+    importDeck;
+    event.target.value = '';
+  };
+ 
+
+// ---------------------------------      
 // --- 3. CORE LOGIC (CARD MGMT) ---
 const addFlashcard = () => {
   const q = $('quest-input').value;
@@ -215,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('login-btn').onclick = syncSystem;
   $('add-btn').onclick = addFlashcard;
   
+
   // Obsługa ocen (Rating)
   if ($('hard-btn')) $('hard-btn').onclick = () => rateCard('hard');
   if ($('good-btn')) $('good-btn').onclick = () => rateCard('good');
@@ -231,8 +261,10 @@ document.addEventListener('DOMContentLoaded', () => {
     link.href = url;
     link.download = `deck_${currentUser}.json`;
     link.click();
+    URL.revokeObjectURL(url); // cleaning memory good practice
   };
-
+  $('import-btn').onclick = () => $('import-input').click();
+  $('import-input').onchange = importDeck;
   const trashBtn = $('delete-btn');
   if (trashBtn) trashBtn.onclick = (e) => { e.stopPropagation(); deleteCard(); };
 
