@@ -239,6 +239,31 @@ const syncSystem = () => {
   } else { alert('Identify yourself, Pilot'); }
 };
 
+const openInspector = () => {
+  const archiveList = $('archive-list');
+  if (!archiveList) return;
+
+  // sweep up list before showup
+  archiveList.innerHTML = `<h3 style = "color:var(--neon-blue)">-- DIMENNSION LOGS --</h3>`;
+
+  if (deck.length === 0) {
+    archiveList.innerHTML += `<p>Empty Sector Data in this Dimension.</p>`;
+  } else {
+    deck.forEach((card, index) => {
+      const item = document.createElement('div');
+      item.style.borderBottom = "1px solid #333";
+      item.style.padding = "5px";
+      item.style.fontSize = "0.8rem";
+      item.innerHTML = `<strong>Q</strong> ${card.question} </br> <strong>S:</strong> ${card.sector}`;
+      archiveList.appendChild(item);
+    });
+  }
+  // Visibility swapp
+  archiveList.style.display = (archiveList.style.display === 'none' || 
+    archiveList.style.display === '') ? 'block' : 'none';
+  console.log("System: StarGate logs accessed.");
+};
+
 // --- 7. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
   $('login-btn').onclick = syncSystem;
