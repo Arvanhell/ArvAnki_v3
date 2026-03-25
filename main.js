@@ -252,25 +252,30 @@ document.addEventListener('DOMContentLoaded', () => {
   if ($('omega-btn')) $('omega-btn').onclick = () => postpone(30);
 
   // System Tools
+  //--- Export Logic ---
   $('export-btn').onclick = () => {
-    if (deck.length === 0) return alert("Empty!");
-    const dataStr = JSON.stringify(deck, null, 2);
-    const dataBlob = new Blob([dataStr], {type:'application/json'});
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `deck_${currentUser}.json`;
-    link.click();
-    URL.revokeObjectURL(url); // cleaning memory good practice
+    if (deck.length === 0) return
+    alert("Empty!");
+      const dataStr = JSON.stringify(deck, null, 2);
+      const dataBlob = new Blob([dataStr], {type:'aplication/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `deck_${currentUser}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
   };
-  $('import-btn').onclick = () => $('import-input').click();
-  $('import-input').onchange = importDeck;
-    if (importBtn && importInput) {
-      importBtn.onclick = (e) => {
-        e.preventDefault();
-        importInput.click()
-      };
-    }
+
+//--- IMPORT Logic ---
+const impBtn = $('import-btn');
+const impInp = $('import-input');
+
+  if (impBtn && impInp) {
+    impBtn.onclick = () => impInp.click(); // click the btn
+    impInp.onchange = importDeck; // call function importDeck()
+  }
+
+  
   const trashBtn = $('delete-btn');
   if (trashBtn) trashBtn.onclick = (e) => { e.stopPropagation(); deleteCard(); };
 
