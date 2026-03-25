@@ -18,33 +18,33 @@ const updateStats = () => {
 const saveToStorage = () => {
   localStorage.setItem(`deck_${currentUser}`, JSON.stringify(deck));
 };
-// Import to Storage 
+
+// --- IMPORT LOGIC
 const importDeck = (event) => {
   const file = event.target.files[0];
-  if (!file) return
+  if (!file) return;
 
   const reader = new FileReader();
+
   reader.onload = (e) => {
     try {
       const importedData = JSON.parse(e.target.result);
-        if (Array.isArray(importedData)) {
-          deck = importedData;
-          saveToStorage();
-          updateStats();
-          showNextDueCard();
-          alert("System: Dimension data synchronized.");
-          } else {
-            alert("Error: Invalid data structure.");
-          }
-        } catch (err){
-          alert("System Error: Data corrupted during transmission.");
-        }
-    };
-    reader.readAsText(file);
-    importDeck;
-    event.target.value = '';
+      if (Array.isArray(importedData)) {
+        deck = importedData;
+        saveToStorage();
+        updateStats();
+        showNextDueCard();
+        alert("System: Dimension data synchronized.");
+      } else {
+        alert("Error: Invalid data structure.");
+      }
+    }catch (err) {
+      alert("System Error: Data corrupted during transmission.");
+    }
   };
- 
+  reader.readAsText(file);
+  event.target.value = ''; // input reset
+}; 
 
 // ---------------------------------      
 // --- 3. CORE LOGIC (CARD MGMT) ---
@@ -265,6 +265,12 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   $('import-btn').onclick = () => $('import-input').click();
   $('import-input').onchange = importDeck;
+    if (importBtn && importInput) {
+      importBtn.onclick = (e) => {
+        e.preventDefault();
+        importInput.click()
+      };
+    }
   const trashBtn = $('delete-btn');
   if (trashBtn) trashBtn.onclick = (e) => { e.stopPropagation(); deleteCard(); };
 
