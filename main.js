@@ -9,7 +9,6 @@ let cardToEditIndex = null;
 let currentActiveSector = 'All';
 
 // --- 2. STORAGE & STATS ---
-
 const updateStats = () => {
   const total = $('total-cards');
   if (total) total.innerText = deck.length;
@@ -19,13 +18,12 @@ const saveToStorage = () => {
   localStorage.setItem(`deck_${currentUser}`, JSON.stringify(deck));
 };
 
-// --- IMPORT LOGIC
+// --- 3. IMPORT / EXPORT LOGIC ---
 const importDeck = (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
-
   reader.onload = (e) => {
     try {
       const importedData = JSON.parse(e.target.result);
@@ -38,16 +36,15 @@ const importDeck = (event) => {
       } else {
         alert("Error: Invalid data structure.");
       }
-    }catch (err) {
-      alert("System Error: Data corrupted during transmission.");
+    } catch (err) {
+      alert("System Error: Data corrupted.");
     }
   };
   reader.readAsText(file);
-  event.target.value = ''; // input reset
-}; 
+  event.target.value = ''; 
+};
 
-// ---------------------------------      
-// --- 3. CORE LOGIC (CARD MGMT) ---
+// --- 4. CORE LOGIC ---
 const addFlashcard = () => {
   const q = $('quest-input').value;
   const a = $('ans-input').value;
@@ -55,39 +52,31 @@ const addFlashcard = () => {
   
   if (q && a) {
     if (editMode && cardToEditIndex !== null) {
-      deck[cardToEditIndex].question = q;
-      deck[cardToEditIndex].answer = a;
-      deck[cardToEditIndex].sector = s;
+      deck[cardToEditIndex] = { ...deck[cardToEditIndex], question: q, answer: a, sector: s };
       editMode = false;
       cardToEditIndex = null;
       $('add-btn').innerText = 'Add to Deck';
       $('add-btn').style.background = '';
     } else {
-      deck.push({ 
-        question: q,
-        answer: a,
-        sector: s,
-        nextReview: 0 });
+      deck.push({ question: q, answer: a, sector: s, nextReview: 0 });
     }
     saveToStorage();
     updateStats();
     $('quest-input').value = '';
     $('ans-input').value = '';
-    $('sector-input').value = '';
     showNextDueCard();
   }
 };
 
 const deleteCard = () => {
   if (cardToEditIndex === null) return;
-  if (confirm("Are you sure want to Delete this Card?")) {
+  if (confirm("Neutralize this card?")) {
     deck.splice(cardToEditIndex, 1);
     editMode = false;
     cardToEditIndex = null;
     saveToStorage();
     updateStats();
     showNextDueCard();
-    console.log("System: Card neutralized.");
   }
 };
 
@@ -97,226 +86,130 @@ const editCurrentCard = (e) => {
   if (currentCard) {
     $('quest-input').value = currentCard.question;
     $('ans-input').value = currentCard.answer;
-    $('sector-input').value = currentCard.sector || 'Deep Space';
+    $('sector-input').value = currentCard.sector;
     editMode = true;
     cardToEditIndex = currentIndex;
-    $('add-btn').innerText = "REPLACE ERROR";
+    $('add-btn').innerText = "REPLACE DATA";
     $('add-btn').style.background = "#d73a49";
     closeDeckView();
     window.scrollTo({top: 0, behavior: 'smooth'});
-    $('quest-input').focus();
   }
 };
 
-// --- 4. RENDER & 3D FLIP LOGIC ---
+// --- 5. RENDER & NAVIGATION ---
 const renderCard = () => {
   const currentCard = deck[currentIndex];
   const inner = $('card-inner');
   const qText = $('question-text');
   const aText = $('answer-text');
-  const showBtn = $('show-answer');
-  const controls = $('repetition-controls');
-  const editHint = $('edit-hint');
-  const trash = $('delete-btn');
-
-  // Reset pozycji karty (powrót na przód)
+  
   if (inner) inner.classList.remove('is-flipped');     
 
   if (!currentCard || currentIndex === -1) {
-    qText.innerHTML = "<div style='opacity:0.5;'>All clear... Rest, Spark. <br> <small>No cards due in this dimension.</small></div>";
-    if (aText) aText.style.display = 'none';
-    if (controls) controls.style.display = "none";
-    if (showBtn) showBtn.style.display = 'none';
-    if (editHint) editHint.style.display = 'none';
+    qText.innerHTML = "<div style='opacity:0.5;'>All clear, Pilot.</div>";
+    if ($('show-answer')) $('show-answer').style.display = 'none';
+    if ($('repetition-controls')) $('repetition-controls').style.display = 'none';
     return;
   }
 
-  // Ustawienie treści
   qText.innerHTML = currentCard.question;
   if (aText) {
     aText.innerText = currentCard.answer;
-    aText.style.display = 'block'; // Musi być widoczne na tyłach
+    aText.style.display = 'block';
   }
-  
-  // Widoczność elementów sterujących
-  if (editHint) editHint.style.display = 'block';
-  if (showBtn) showBtn.style.display = 'block';
-  if (controls) controls.style.display = 'none'; // Ukryte do momentu obrotu
-  if (trash) trash.style.display = editMode ? 'flex' : 'none';
+  if ($('show-answer')) $('show-answer').style.display = 'block';
+  if ($('repetition-controls')) $('repetition-controls').style.display = 'none';
 };
 
 const toggleFlip = (e) => {
-  // BLOKADA: nie obracaj, jeśli kliknięto przyciski lub hinta
-  if (e && e.target) {
-    if (e.target.closest('#repetition-controls') || 
-        e.target.closest('#edit-hint') || 
-        e.target.closest('#delete-btn')) {
-      return; 
-    }
-  }
-
+  if (e && (e.target.closest('#repetition-controls') || e.target.closest('#edit-hint'))) return;
   const inner = $('card-inner');
   if (inner) {
     inner.classList.toggle('is-flipped');
-    // Jeśli karta jest odwrócona na tył (back)
-    if (inner.classList.contains('is-flipped')) {
-      const controls = $('repetition-controls');
-      const showBtn = $('show-answer');
-      if (controls) controls.style.display = 'flex'; // POKAZUJEMY PANEL OCEN
-      if (showBtn) showBtn.style.display = 'none';   // UKRYWAMY PRZYCISK REVEAL
-    }
+    const isFlipped = inner.classList.contains('is-flipped');
+    if ($('repetition-controls')) $('repetition-controls').style.display = isFlipped ? 'flex' : 'none';
+    if ($('show-answer')) $('show-answer').style.display = isFlipped ? 'none' : 'block';
   }
-};
-
-// --- 5. REVIEW LOGIC (POSTPONE) ---
-const postpone = (days) => {
-  if (currentIndex === -1) return;
-  const msInDay = 24 * 60 * 60 * 1000;
-  deck[currentIndex].nextReview = Date.now() + (days * msInDay);
-  saveToStorage();
-  updateStats();
-  showNextDueCard(); // Przejdź do następnej karty
-};
-
-const rateCard = (level) => {
-  if (level === 'hard') postpone(1);
-  if (level === 'good') postpone(3);
-  if (level === 'easy') postpone(7);
 };
 
 const showNextDueCard = () => {
   const now = Date.now();
-  const dueCards = deck.filter(card => {
-    const isDue = !card.nextReview || card.nextReview <= now;
-    const isCorrectSector = (currentActiveSector === 'All' || card.sector === currentActiveSector);
-    return isDue && isCorrectSector;
-  });
-  
+  const dueCards = deck.filter(c => (currentActiveSector === 'All' || c.sector === currentActiveSector) && (!c.nextReview || c.nextReview <= now));
   currentIndex = dueCards.length > 0 ? deck.indexOf(dueCards[0]) : -1;
   renderCard();
   renderSectorFilters();
 };
 
-// --- 6. SECTOR FILTERS & TOOLS ---
 const renderSectorFilters = () => {
   const nav = $('sector-nav');
   if (!nav) return;
-  const sectors = ['All', ...new Set(deck.map(card => card.sector || 'Deep Space'))];
+  const sectors = ['All', ...new Set(deck.map(c => c.sector || 'Deep Space'))];
   nav.innerHTML = ''; 
-  sectors.forEach(sector => {
+  sectors.forEach(s => {
     const btn = document.createElement('button');
-    btn.innerText = sector;
-    btn.className = (currentActiveSector === sector) ? 'active-sector-btn' : 'sector-btn';
-    btn.onclick = () => {
-      currentActiveSector = sector;
-      showNextDueCard();
-    };
+    btn.innerText = s;
+    btn.className = (currentActiveSector === s) ? 'active-sector-btn' : 'sector-btn';
+    btn.onclick = () => { currentActiveSector = s; showNextDueCard(); };
     nav.appendChild(btn);
   });
 };
 
-const openDeckView = () => {
-  $('deck-modal').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  showNextDueCard();
+// --- 6. TOOLS & INSPECTOR ---
+const openInspector = () => {
+  const list = $('archive-list');
+  if (!list) return;
+  list.innerHTML = '<h3 style="color:var(--neon-blue)">— DIMENSION LOGS —</h3>';
+  deck.forEach(c => {
+    list.innerHTML += `<div style="border-bottom:1px solid #222; padding:5px; font-size:0.8rem;">Q: ${c.question} | S: ${c.sector}</div>`;
+  });
+  list.style.display = (list.style.display === 'none') ? 'block' : 'none';
 };
 
-const closeDeckView = () => {
-  $('deck-modal').style.display = "none";
-  document.body.style.overflow = 'auto';
-};
+const openDeckView = () => { $('deck-modal').style.display = 'flex'; showNextDueCard(); };
+const closeDeckView = () => { $('deck-modal').style.display = "none"; };
 
 const syncSystem = () => {
   const name = $('user-input').value.trim();
   if (name) {
     currentUser = name;
-    $('display-name').innerHTML = `<span style="font-size: 0.7rem; opacity: 0.7;">:</span> ${currentUser}`;
+    $('display-name').innerText = currentUser;
     deck = JSON.parse(localStorage.getItem(`deck_${currentUser}`)) || [];
     updateStats();
     showNextDueCard();
-    $('user-input').value = '';
-    $('quest-input').focus();
-  } else { alert('Identify yourself, Pilot'); }
-};
-
-const openInspector = () => {
-  const archiveList = $('archive-list');
-  if (!archiveList) return;
-
-  // sweep up list before showup
-  archiveList.innerHTML = `<h3 style = "color:var(--neon-blue)">-- DIMENNSION LOGS --</h3>`;
-
-  if (deck.length === 0) {
-    archiveList.innerHTML += `<p>Empty Sector Data in this Dimension.</p>`;
-  } else {
-    deck.forEach((card, index) => {
-      const item = document.createElement('div');
-      item.style.borderBottom = "1px solid #333";
-      item.style.padding = "5px";
-      item.style.fontSize = "0.8rem";
-      item.innerHTML = `<strong>Q</strong> ${card.question} </br> <strong>S:</strong> ${card.sector}`;
-      archiveList.appendChild(item);
-    });
   }
-  // Visibility swapp
-  archiveList.style.display = (archiveList.style.display === 'none' || 
-    archiveList.style.display === '') ? 'block' : 'none';
-  console.log("System: StarGate logs accessed.");
 };
 
 // --- 7. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-  $('login-btn').onclick = syncSystem;
-  $('add-btn').onclick = addFlashcard;
+  if($('login-btn')) $('login-btn').onclick = syncSystem;
+  if($('add-btn')) $('add-btn').onclick = addFlashcard;
+  if($('star-gate-btn')) $('star-gate-btn').onclick = openInspector;
   
-
-  // Obsługa ocen (Rating)
-  if ($('hard-btn')) $('hard-btn').onclick = () => rateCard('hard');
-  if ($('good-btn')) $('good-btn').onclick = () => rateCard('good');
-  if ($('easy-btn')) $('easy-btn').onclick = () => rateCard('easy');
-  if ($('omega-btn')) $('omega-btn').onclick = () => postpone(30);
-
-  // System Tools
-
-  //--- Export Logic ---
-  $('export-btn').onclick = () => {
-    if (deck.length === 0) {
-      alert("Deck is empty! Nothing to export.");
-      return;
-    }
-    const dataStr = JSON.stringify(deck, null, 2);
-    const dataBlob = new Blob([dataStr], {type:'application/json'});
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `deck_${currentUser}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+  const rate = (d) => {
+    if (currentIndex === -1) return;
+    deck[currentIndex].nextReview = Date.now() + (d * 86400000);
+    saveToStorage(); updateStats(); showNextDueCard();
   };
 
-  //--- IMPORT Logic ---
-  const impBtn = $('import-btn');
-  const impInp = $('import-input');
+  if($('hard-btn')) $('hard-btn').onclick = () => rate(1);
+  if($('good-btn')) $('good-btn').onclick = () => rate(3);
+  if($('easy-btn')) $('easy-btn').onclick = () => rate(7);
 
+  // Tools
+  if($('export-btn')) $('export-btn').onclick = () => {
+    if (deck.length === 0) return alert("Empty!");
+    const blob = new Blob([JSON.stringify(deck, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `deck.json`; a.click();
+  };
+
+  const impBtn = $('import-btn'), impInp = $('import-input');
   if (impBtn && impInp) {
-    impBtn.onclick = () => impInp.click(); 
-    impInp.onchange = importDeck; 
+    impBtn.onclick = () => impInp.click();
+    impInp.onchange = importDeck;
   }
-
-  
-  const trashBtn = $('delete-btn');
-  if (trashBtn) trashBtn.onclick = (e) => { e.stopPropagation(); deleteCard(); };
 
   updateStats();
   showNextDueCard();
   renderSectorFilters();
-  console.log('--- Anki ARV V3.0: ACTIVE ---');
 });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-    .then(reg => console.log('ARV System: Offline Mode Active', reg))
-    .catch(err => console.log('ARV System: Offline Mode Failed', err));
-  });
-}
