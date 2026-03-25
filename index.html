@@ -35,8 +35,6 @@
         <small style="color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 1px;">ACTIVE SECTOR:</small>
         <nav id="sector-nav">
           </nav>
-        
-        <button id="delete-sector-btn" title="Neutralize this dimension">ERASE</button>
       </div>
         <div style="text-align: center; margin: 20px 0;">
           <button onclick="openDeckView()" class="active-sector-btn" style="padding: 15px 40px;">
@@ -47,12 +45,13 @@
         <div class="flashcard-stage" onclick="toggleFlip(event)">
             <div id="card-inner" class="card-inner">
                 
-                <div class="card-front">
-                    <button id="delete-btn" style="display:none; position:absolute; top:10px; right:10px;">🗑</button>
-                    <h2 id="question-text">Sync system to start...</h2>
-                    <div id="show-answer" class="sector-btn">🦾 REVEAL TRUTH 🔄</div>
-                    <div id="edit-hint" onclick="editCurrentCard(event)">[TAP TO EDIT]</div>
-                </div>
+              <div class="card-front">
+                <button id="delete-btn" onclick="deleteCard(event)">🗑</button>
+                <h2 id="question-text">Sync system to start...</h2>
+                <div id="show-answer" class="sector-btn">🦾 REVEAL TRUTH 🔄</div>
+                <div id="edit-hint" onclick="editCurrentCard(event)">[TAP TO EDIT]</div>
+            </div>
+            
     
                 <div class="card-back">
                     <div id="answer-text" style="display:none"></div>
@@ -67,6 +66,8 @@
             </div>
         </div>
         <div class="modal-footer">
+        
+          
             <button onclick="closeDeckView()" class="sector-btn">RETURN TO GARAGE</button>
         </div>
     </div>

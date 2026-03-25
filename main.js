@@ -67,18 +67,28 @@ const addFlashcard = () => {
     showNextDueCard();
   }
 };
+// --- Delete Card Logic
 
-const deleteCard = () => {
-  if (cardToEditIndex === null) return;
+const deleteCard = (e) => {
+  if (e) e.stopPropagation(); // no flipping card while we click delete card
+  if (currentIndex === -1 || deck.length === 0) return;
   if (confirm("Neutralize this card?")) {
-    deck.splice(cardToEditIndex, 1);
-    editMode = false;
-    cardToEditIndex = null;
+    deck.splice(currentIndex, 1); // delete showing card
     saveToStorage();
     updateStats();
+    
+    if (deck.length === 0) {
+      currentIndex = -1;
+    } else if (currentIndex >= deck.length){
+      currentIndex = deck.length -1;
+    }
     showNextDueCard();
+    alert("Target neutralized, follow the path Pilot");
   }
 };
+
+
+// --- Edit Card Logic
 
 const editCurrentCard = (e) => {
   if (e) e.stopPropagation(); 
@@ -185,6 +195,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if($('add-btn')) $('add-btn').onclick = addFlashcard;
   if($('star-gate-btn')) $('star-gate-btn').onclick = openInspector;
   
+  const deleteBtn = $('delete-btn');
+    if (deleteBtn) {
+    deleteBtn.style.display = 'block'; // Pokazujemy śmietnik
+    deleteBtn.onclick = deleteCard;    // Łączymy z funkcją
+}
+
   const rate = (d) => {
     if (currentIndex === -1) return;
     deck[currentIndex].nextReview = Date.now() + (d * 86400000);

@@ -162,23 +162,21 @@
   /* --- 6. Bin little agent  --- */
   #delete-btn {
     position: absolute;
-    top: -15px;         /* Wystaje lekko ponad górną krawędź karty */
-    right: -15px;       /* Wystaje lekko poza prawą krawędź karty */
-    width: 45px;
+    top: -20px;
+    right: -20px;       /* Wystaje lekko poza prawą krawędź karty */
+    width: 40px;
     height: 45px;
     border-radius: 50%;
     background: var(--bg-color); /* Tło jak strona, żeby się odcinał */
     color: var(--danger);
     border: 2px solid var(--danger);
-    display: none;       /* Startowo ukryty, JS go włączy */
+    z-index: 100; 
+    display: flex !important;
+    cursor: pointer;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    z-index: 999;        /* Nad wszystkimi innymi elementami */
-    font-size: 1.4rem;
     box-shadow: 0 0 15px rgba(248, 81, 73, 0.4);
     transition: 0.3s ease;
-  
   }
   
   #delete-btn:hover {
@@ -368,23 +366,6 @@
     padding: 10px 20px;
 }
 
-  
-  #delete-sector-btn {
-    background: transparent;
-    color: #ff4444;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    opacity: 0.5;
-    display: block; 
-    margin: 20px auto;
-    width: fit-content; 
-  }
-  
-  #delete-sector-btn:hover {
-    opacity: 1;
-  }
-  
   /* --- 9. MODAL & 3D FLASHCARD SYSTEM --- */
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
