@@ -58,22 +58,32 @@ const importDeck = (event) => {
 const addFlashcard = () => {
   const q = $('quest-input').value;
   const a = $('ans-input').value;
+  const c = $('context-input').value;
   const s = $('sector-input').value || 'Deep Space';
   
   if (q && a) {
+    const cardData = {
+      question: q,
+      answer: a,
+      context: c,
+      sector: s,
+      nextReview: 0
+    };
+
     if (editMode && cardToEditIndex !== null) {
-      deck[cardToEditIndex] = { ...deck[cardToEditIndex], question: q, answer: a, sector: s };
+      deck[cardToEditIndex] = cardData;
       editMode = false;
       cardToEditIndex = null;
       $('add-btn').innerText = 'Add to Deck';
       $('add-btn').style.background = '';
     } else {
-      deck.push({ question: q, answer: a, sector: s, nextReview: 0 });
+      deck.push(cardData);
     }
     saveToStorage();
     updateStats();
     $('quest-input').value = '';
     $('ans-input').value = '';
+    $('context-input').value = '';
     showNextDueCard();
   }
 };
@@ -116,6 +126,7 @@ const editCurrentCard = (e) => {
   }
     $('quest-input').value = currentCard.question;
     $('ans-input').value = currentCard.answer;
+    $('context-input').value = currentCard.context || ''; // Load context into input
     $('sector-input').value = currentCard.sector || 'Deep Space';
     // Activation of edit procedure
     editMode = true;
@@ -156,38 +167,40 @@ const renderCard = () => {
 };
 
 const toggleFlip = (e) => {
-  // Prevent card rotation if clicking on rating buttons or the answer field.
   if (e && (e.target.closest('#repetition-controls') || e.target.closest('#edit-hint') || e.target.closest('input'))) return;
   
   const inner = $('card-inner');
   if (inner) {
     inner.classList.toggle('is-flipped');
     const isFlipped = inner.classList.contains('is-flipped');
-    // 2. Display Management: Hide/show rating buttons and reveal-truth trigger.
-
     
     if (isFlipped) {
-        //Toggle Visibility: Switch from front-side action to back-side rating.
         if ($('repetition-controls')) $('repetition-controls').style.display = 'flex';
         if ($('show-answer')) $('show-answer').style.display = 'none';
 
-  // --- ANSWER VALIDATION: Compare user input with stored data ---
         const userAns = $('answer-input').value.trim().toLowerCase();
         const realAns = deck[currentIndex].answer.trim().toLowerCase();
+        // FIXED: Define contextData before using it
+        const contextData = deck[currentIndex].context || "";
         
         if (userAns) {
           const isCorrect = userAns === realAns;
           $('answer-text').innerHTML = `
-            <div style="font-size: 0.8rem; color: #888;">TWOJA WERSJA:</div>
+            <div style="font-size: 0.8rem; color: #888; text-transform: uppercase;">Your Version:</div>
             <div style="color: ${isCorrect ? '#44ff44' : '#ff4444'}; margin-bottom: 10px;">${$('answer-input').value}</div>
-            <div style="font-size: 0.8rem; color: #888;">PRAWDA:</div>
-            <div style="font-size: 1.1rem;">${deck[currentIndex].answer}</div>
+            <div style="font-size: 0.8rem; color: #888; text-transform: uppercase;">True Record:</div>
+            <div style="font-size: 1.1rem; font-weight: bold; color: var(--neon-green);">${deck[currentIndex].answer}</div>
+            ${contextData ? `<div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #444; font-size: 0.85rem; color: #adbac7; font-style: italic;">${contextData}</div>` : ''}
           `;
         } else {
-          $('answer-text').innerText = deck[currentIndex].answer;
+          // FIXED: Use .innerHTML instead of .innerText for tags to work
+          $('answer-text').innerHTML = `
+            <div style="font-size: 1.2rem; color: var(--neon-green); font-weight: bold;">${deck[currentIndex].answer}</div>
+            ${contextData ? `<div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #444; font-size: 0.85rem; color: #adbac7; font-style: italic;">${contextData}</div>` : ''}
+          `;     
         }
     } else {
-  // --- STATE RESET: Hide rating controls and restore "Reveal Truth" (Front-side) ---      
+        // FRONT-SIDE RESET
         if ($('repetition-controls')) $('repetition-controls').style.display = 'none';
         if ($('show-answer')) $('show-answer').style.display = 'block';
     }
