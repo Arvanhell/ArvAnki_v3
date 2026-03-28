@@ -113,6 +113,7 @@ const renderCard = () => {
   const qText = $('question-text');
   const aText = $('answer-text');
   
+  if ($('answer-input')) $('answer-input').value = '';
   if (inner) inner.classList.remove('is-flipped');     
 
   if (!currentCard || currentIndex === -1) {
@@ -132,15 +133,44 @@ const renderCard = () => {
 };
 
 const toggleFlip = (e) => {
-  if (e && (e.target.closest('#repetition-controls') || e.target.closest('#edit-hint'))) return;
+  // Prevent card rotation if clicking on rating buttons or the answer field.
+  if (e && (e.target.closest('#repetition-controls') || e.target.closest('#edit-hint') || e.target.closest('input'))) return;
+  
   const inner = $('card-inner');
   if (inner) {
     inner.classList.toggle('is-flipped');
     const isFlipped = inner.classList.contains('is-flipped');
-    if ($('repetition-controls')) $('repetition-controls').style.display = isFlipped ? 'flex' : 'none';
-    if ($('show-answer')) $('show-answer').style.display = isFlipped ? 'none' : 'block';
+    // 2. Display Management: Hide/show rating buttons and reveal-truth trigger.
+
+    
+    if (isFlipped) {
+        //Toggle Visibility: Switch from front-side action to back-side rating.
+        if ($('repetition-controls')) $('repetition-controls').style.display = 'flex';
+        if ($('show-answer')) $('show-answer').style.display = 'none';
+
+  // --- ANSWER VALIDATION: Compare user input with stored data ---
+        const userAns = $('answer-input').value.trim().toLowerCase();
+        const realAns = deck[currentIndex].answer.trim().toLowerCase();
+        
+        if (userAns) {
+          const isCorrect = userAns === realAns;
+          $('answer-text').innerHTML = `
+            <div style="font-size: 0.8rem; color: #888;">TWOJA WERSJA:</div>
+            <div style="color: ${isCorrect ? '#44ff44' : '#ff4444'}; margin-bottom: 10px;">${$('answer-input').value}</div>
+            <div style="font-size: 0.8rem; color: #888;">PRAWDA:</div>
+            <div style="font-size: 1.1rem;">${deck[currentIndex].answer}</div>
+          `;
+        } else {
+          $('answer-text').innerText = deck[currentIndex].answer;
+        }
+    } else {
+  // --- STATE RESET: Hide rating controls and restore "Reveal Truth" (Front-side) ---      
+        if ($('repetition-controls')) $('repetition-controls').style.display = 'none';
+        if ($('show-answer')) $('show-answer').style.display = 'block';
+    }
   }
 };
+
 
 const showNextDueCard = () => {
   const now = Date.now();
@@ -164,16 +194,52 @@ const renderSectorFilters = () => {
   });
 };
 
-// --- 6. TOOLS & INSPECTOR ---
+// --- 6. TOOLS & INSPECTOR (STAR GATE) ---
 const openInspector = () => {
   const list = $('archive-list');
   if (!list) return;
-  list.innerHTML = '<h3 style="color:var(--neon-blue)">— DIMENSION LOGS —</h3>';
-  deck.forEach(c => {
-    list.innerHTML += `<div style="border-bottom:1px solid #222; padding:5px; font-size:0.8rem;">Q: ${c.question} | S: ${c.sector}</div>`;
+
+// 6.1. --- Visibility Toggle: If inspector is open, hide it and early exit.
+  if (list.style.display === 'block') {
+    list.style.display = 'none';
+    return;
+  }
+
+  // 6.2. --- DOM RESET: Clear container and initialize list generation ---
+  list.innerHTML = '<h3 style="color:var(--neon-blue); text-align:center;">— DIMENSION LOGS —</h3>';
+  
+  if (deck.length === 0) {
+    list.innerHTML += "<div style='text-align:center; opacity:0.5;'>Empty space... Sync system.</div>";
+  }
+
+  const now = Date.now();
+
+  // 6.3. --- DYNAMIC RENDERING: Build entry list with RECALL functionality ---
+  deck.forEach((c, index) => {
+    const isPostponed = c.nextReview && c.nextReview > now;
+    const statusColor = isPostponed ? '#ff4444' : 'var(--neon-blue)';
+    const statusText = isPostponed ? '[LOCKED]' : '[READY]';
+
+    list.innerHTML += `
+      <div style="border: 1px solid #333; padding: 10px; margin-bottom: 8px; background: rgba(0,0,0,0.6); border-radius: 5px;">
+        <div style="font-size: 0.6rem; color: ${statusColor}; margin-bottom: 5px;">
+          ${statusText} | Sector: ${c.sector}
+        </div>
+        <div style="font-size: 0.8rem; color: #eee; margin-bottom: 10px;">
+          Q: ${c.question.substring(0, 50)}${c.question.length > 50 ? '...' : ''}
+        </div>
+        <button onclick="currentIndex=${index}; renderCard(); openDeckView(); $('archive-list').style.display='none';" 
+                style="background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); padding: 5px 12px; cursor: pointer; font-size: 0.7rem; border-radius: 3px;">
+          RECALL DATA
+        </button>
+      </div>
+    `;
   });
-  list.style.display = (list.style.display === 'none') ? 'block' : 'none';
+
+// 6.4.  --- UI ACTIVATION: Finalize rendering and display the archive list ---
+  list.style.display = 'block';
 };
+
 
 const openDeckView = () => { $('deck-modal').style.display = 'flex'; showNextDueCard(); };
 const closeDeckView = () => { $('deck-modal').style.display = "none"; };
@@ -197,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const deleteBtn = $('delete-btn');
     if (deleteBtn) {
-    deleteBtn.style.display = 'block'; // Pokazujemy śmietnik
-    deleteBtn.onclick = deleteCard;    // Łączymy z funkcją
+    deleteBtn.style.display = 'block'; // show the bin =
+    deleteBtn.onclick = deleteCard;    // execute bin
 }
 
   const rate = (d) => {
