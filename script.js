@@ -1,3 +1,13 @@
+// --- EMERGENCY SERVICE WORKER KILL -SWITCH ---
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registrations of registrations) {
+      registration.unregister();
+      console.log("System: Legacy Service Worker nautralized.");
+    }
+  });
+}
+
 // --- 1. HELPER & GLOBAL STATE ---
 const $ = (id) => document.getElementById(id);
 
