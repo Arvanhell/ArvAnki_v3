@@ -71,18 +71,25 @@ const addFlashcard = () => {
 
 const deleteCard = (e) => {
   if (e) e.stopPropagation(); // no flipping card while we click delete card
-  if (currentIndex === -1 || deck.length === 0) return;
-  if (confirm("Neutralize this card?")) {
+  if (currentIndex < 0 || currentIndex >= deck.length) {
+    alert("System: No target locked");
+    return;
+  }
+  if (confirm("Neutralize this card permanently?")) {
     deck.splice(currentIndex, 1); // delete showing card
     saveToStorage();
     updateStats();
-    
+    // next step after delete
     if (deck.length === 0) {
       currentIndex = -1;
-    } else if (currentIndex >= deck.length){
+      closeDeckView();
+    } else {
+      if (currentIndex >= deck.length) {
       currentIndex = deck.length -1;
     }
-    showNextDueCard();
+    renderCard();
+  }
+   // showNextDueCard();
     alert("Target neutralized, follow the path Pilot");
   }
 };
@@ -93,17 +100,23 @@ const deleteCard = (e) => {
 const editCurrentCard = (e) => {
   if (e) e.stopPropagation(); 
   const currentCard = deck[currentIndex];
-  if (currentCard) {
+  if (!currentCard) {
+    alert("System: Data record not found.");
+    return;
+  }
     $('quest-input').value = currentCard.question;
     $('ans-input').value = currentCard.answer;
-    $('sector-input').value = currentCard.sector;
+    $('sector-input').value = currentCard.sector || 'Deep Space';
+    // Activation of edit procedure
     editMode = true;
     cardToEditIndex = currentIndex;
+    const addBtn = $('add-btn');
+    if (addBtn) {
     $('add-btn').innerText = "REPLACE DATA";
     $('add-btn').style.background = "#d73a49";
+    }
     closeDeckView();
     window.scrollTo({top: 0, behavior: 'smooth'});
-  }
 };
 
 // --- 5. RENDER & NAVIGATION ---
@@ -241,7 +254,9 @@ const openInspector = () => {
 };
 
 
-const openDeckView = () => { $('deck-modal').style.display = 'flex'; showNextDueCard(); };
+const openDeckView = () => { 
+  if ($('deck-modal')) $('deck-modal').style.display = 'flex'; 
+}
 const closeDeckView = () => { $('deck-modal').style.display = "none"; };
 
 const syncSystem = () => {
@@ -266,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteBtn.style.display = 'block'; // show the bin =
     deleteBtn.onclick = deleteCard;    // execute bin
 }
-
+ 
   const rate = (d) => {
     if (currentIndex === -1) return;
     deck[currentIndex].nextReview = Date.now() + (d * 86400000);

@@ -148,8 +148,8 @@
   
   #edit-hint {
     position: absolute;
-    top: 45px;
-    right: 12px;
+    bottom: 15px;
+    right: 15px;
     font-size: 0.6rem;
     color: var(--neon-blue);
     opacity: 0.4;
@@ -162,12 +162,13 @@
   /* --- 6. Bin little agent  --- */
   #delete-btn {
     position: absolute;
-    top: -20px;
-    right: -20px;       /* Wystaje lekko poza prawą krawędź karty */
-    width: 40px;
-    height: 45px;
+    top: 15px;
+    right: 15px;       /* Wystaje lekko poza prawą krawędź karty */
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    background: var(--bg-color); /* Tło jak strona, żeby się odcinał */
+    /* background: var(--bg-color); /* Tło jak strona, żeby się odcinał */
+    background: rgba(13, 17, 23, 0.8);
     color: var(--danger);
     border: 2px solid var(--danger);
     z-index: 100; 
@@ -178,7 +179,11 @@
     box-shadow: 0 0 15px rgba(248, 81, 73, 0.4);
     transition: 0.3s ease;
   }
-  
+  #delete-btn, #edit-hint {
+    backface-visibility: hidden;
+    transform: translateZ(1px)
+  }
+
   #delete-btn:hover {
     background: var(--danger);
     color: white;
@@ -406,9 +411,14 @@
   box-shadow: 0 0 20px rgba(88, 166, 255, 0.1);
 }
 
+.card-front {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  
+}
 /* Specyfika tyłu karty */
 .card-back {
-  position: absolute; /* Przywracamy absolute, by mechanizm 3D działał */
+
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
