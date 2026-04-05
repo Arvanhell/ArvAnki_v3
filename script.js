@@ -314,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if($('hard-btn')) $('hard-btn').onclick = () => rate(1);
   if($('good-btn')) $('good-btn').onclick = () => rate(3);
   if($('easy-btn')) $('easy-btn').onclick = () => rate(7);
+  if($('omega-btn')) $('omega-btn').onclick = () => rate(30);
 
   // Tools
   if($('export-btn')) $('export-btn').onclick = () => {
