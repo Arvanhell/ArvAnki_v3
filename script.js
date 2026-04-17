@@ -87,7 +87,7 @@ const addFlashcard = () => {
     showNextDueCard();
   }
 };
-// --- Delete Card Logic
+// ---- Delete Card Logic ---- //
 
 const deleteCard = (e) => {
   if (e) e.stopPropagation(); // no flipping card while we click delete card
@@ -113,7 +113,7 @@ const deleteCard = (e) => {
     alert("Target neutralized, follow the path Pilot");
   }
 };
-
+// system online back to work fox: delete//
 
 // --- Edit Card Logic
 
